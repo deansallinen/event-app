@@ -3,8 +3,8 @@
 <ul>
 
   <li>
-    <strong>Title:</strong>
-    <%= @event.title %>
+    <strong>Name:</strong>
+    <%= @event.name %>
   </li>
 
   <li>
@@ -13,17 +13,19 @@
   </li>
 
   <li>
+    <strong>Location:</strong>
+    <%= @event.location %>
+  </li>
+
+  <li>
     <strong>Date:</strong>
     <%= @event.date %>
   </li>
-
 </ul>
+
+<%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %>
+
+<%= render ListappWeb.ItemView, "form.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset%>
 
 <span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
 <span><%= link "Back", to: Routes.event_path(@conn, :index) %></span>
-
-
-<% for item <- @event.item do %>
-  <p><%= item.name %></p>
-<% end %>
-

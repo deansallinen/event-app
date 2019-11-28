@@ -1,10 +1,9 @@
-<h1>Listing Items</h1>
+<h1>All Items</h1>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
-
       <th></th>
     </tr>
   </thead>
@@ -12,15 +11,14 @@
 <%= for item <- @items do %>
     <tr>
       <td><%= item.name %></td>
-
       <td>
-        <span><%= link "Show", to: Routes.item_path(@conn, :show, item) %></span>
-        <span><%= link "Edit", to: Routes.item_path(@conn, :edit, item) %></span>
-        <span><%= link "Delete", to: Routes.item_path(@conn, :delete, item), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><%= link "Show", to: Routes.event_item_path(@conn, :show, @conn.assigns.event.id, item) %></span>
+        <span><%= link "Edit", to: Routes.event_item_path(@conn, :edit, @conn.assigns.event.id, item) %></span>
+        <span><%= link "Delete", to: Routes.event_item_path(@conn, :delete, @conn.assigns.event.id, item), method: :delete, data: [confirm: "Are you sure?"] %></span>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Item", to: Routes.item_path(@conn, :new) %></span>
+<%# <span><%= link "New Event", to: Routes.event_path(@conn, :new) %1></span> %>

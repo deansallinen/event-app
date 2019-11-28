@@ -1,11 +1,14 @@
-defmodule Listapp.Web.Item do
+defmodule Listapp.Events.Item do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Listapp.Web.Event
+  alias Listapp.Events.Event
+  alias Listapp.Accounts.User
 
   schema "items" do
     field :name, :string
+
     belongs_to :event, Event
+    belongs_to :user, User
 
     timestamps()
   end
@@ -13,7 +16,7 @@ defmodule Listapp.Web.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :event_id])
     |> validate_required([:name])
   end
 end

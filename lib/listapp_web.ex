@@ -23,6 +23,7 @@ defmodule ListappWeb do
 
       import Plug.Conn
       import ListappWeb.Gettext
+      import ListappWeb.Auth, only: [authenticate_user: 2]
       alias ListappWeb.Router.Helpers, as: Routes
     end
   end
@@ -50,6 +51,7 @@ defmodule ListappWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import ListappWeb.Auth, only: [authenticate_user: 2]
     end
   end
 

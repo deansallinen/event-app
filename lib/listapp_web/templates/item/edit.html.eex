@@ -1,5 +1,5 @@
 <h1>Edit Item</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.item_path(@conn, :update, @item)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.event_item_path(@conn, :update, @event, @item)) %>
 
-<span><%= link "Back", to: Routes.item_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.event_path(@conn, :index) %></span>

@@ -1,108 +1,13 @@
-defmodule Listapp.Web do
+defmodule Listapp.Events do
   @moduledoc """
-  The Web context.
+  The Events context.
   """
 
   import Ecto.Query, warn: false
   alias Listapp.Repo
 
-  alias Listapp.Web.Todo
-
-  @doc """
-  Returns the list of todos.
-
-  ## Examples
-
-      iex> list_todos()
-      [%Todo{}, ...]
-
-  """
-  def list_todos do
-    Repo.all(Todo)
-  end
-
-  @doc """
-  Gets a single todo.
-
-  Raises `Ecto.NoResultsError` if the Todo does not exist.
-
-  ## Examples
-
-      iex> get_todo!(123)
-      %Todo{}
-
-      iex> get_todo!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_todo!(id), do: Repo.get!(Todo, id)
-
-  @doc """
-  Creates a todo.
-
-  ## Examples
-
-      iex> create_todo(%{field: value})
-      {:ok, %Todo{}}
-
-      iex> create_todo(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_todo(attrs \\ %{}) do
-    %Todo{}
-    |> Todo.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a todo.
-
-  ## Examples
-
-      iex> update_todo(todo, %{field: new_value})
-      {:ok, %Todo{}}
-
-      iex> update_todo(todo, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_todo(%Todo{} = todo, attrs) do
-    todo
-    |> Todo.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Todo.
-
-  ## Examples
-
-      iex> delete_todo(todo)
-      {:ok, %Todo{}}
-
-      iex> delete_todo(todo)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_todo(%Todo{} = todo) do
-    Repo.delete(todo)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking todo changes.
-
-  ## Examples
-
-      iex> change_todo(todo)
-      %Ecto.Changeset{source: %Todo{}}
-
-  """
-  def change_todo(%Todo{} = todo) do
-    Todo.changeset(todo, %{})
-  end
-
-  alias Listapp.Web.Event
+  alias Listapp.Events.Event
+  alias Listapp.Accounts.User
 
   @doc """
   Returns the list of events.
@@ -114,11 +19,26 @@ defmodule Listapp.Web do
 
   """
   def list_events do
-    Event
-    |> Repo.all()
-    |> Repo.preload(:item)
-
+    Repo.all(Event)
   end
+
+  def list_user_events(%User{} = user) do
+    Event
+    |> user_events_query(user)
+    |> Repo.all()
+  end
+
+  def get_user_event!(%User{} = user, id) do
+    Event
+    |> user_events_query(user)
+    |> Repo.get!(id)
+    |> Repo.preload(:items)
+  end
+
+  defp user_events_query(query, %User{id: user_id}) do
+    from(e in query, where: e.user_id == ^user_id) 
+  end
+
 
   @doc """
   Gets a single event.
@@ -135,10 +55,10 @@ defmodule Listapp.Web do
 
   """
   def get_event!(id) do
-    Event 
+    Event
     |> Repo.get!(id)
-    |> Repo.preload(:item)
-    end
+    |> Repo.preload(:items)
+  end
 
   @doc """
   Creates a event.
@@ -152,9 +72,10 @@ defmodule Listapp.Web do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_event(attrs \\ %{}) do
+  def create_event(%User{} = user, attrs \\ %{}) do
     %Event{}
     |> Event.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
@@ -205,7 +126,7 @@ defmodule Listapp.Web do
     Event.changeset(event, %{})
   end
 
-  alias Listapp.Web.Item
+  alias Listapp.Events.Item
 
   @doc """
   Returns the list of items.
@@ -217,7 +138,27 @@ defmodule Listapp.Web do
 
   """
   def list_items do
-    Repo.all(Item)
+    Item
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
+  def list_items_in_event(%Event{} = event) do
+    Item
+    |> events_items_query(event)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
+  def get_item_in_event!(%Event{} = event, id) do
+    Item
+    |> events_items_query(event)
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+  end
+
+  defp events_items_query(query, %Event{id: event_id}) do
+    from(i in query, where: i.event_id == ^event_id) 
   end
 
   @doc """
@@ -234,23 +175,29 @@ defmodule Listapp.Web do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item!(id) do 
+    Item
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
+  end
 
   @doc """
   Creates a item.
 
   ## Examples
 
-      iex> create_item(%{field: value})
+      iex> create_item(event, %{field: value})
       {:ok, %Item{}}
 
-      iex> create_item(%{field: bad_value})
+      iex> create_item(event, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_item(attrs \\ %{}) do
+  def create_item(%User{} = user, %Event{} = event, attrs \\ %{}) do
     %Item{}
     |> Item.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:event, event)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 

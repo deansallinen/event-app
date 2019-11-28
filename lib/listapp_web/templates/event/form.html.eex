@@ -5,13 +5,17 @@
     </div>
   <% end %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
 
   <%= label f, :description %>
-  <%= text_input f, :description %>
+  <%= textarea f, :description %>
   <%= error_tag f, :description %>
+
+  <%= label f, :location %>
+  <%= text_input f, :location %>
+  <%= error_tag f, :location %>
 
   <%= label f, :date %>
   <%= date_select f, :date %>

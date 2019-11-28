@@ -1,10 +1,11 @@
-<h1>Listing Events</h1>
+<h1>My Events</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Title</th>
+      <th>Name</th>
       <th>Description</th>
+      <th>Location</th>
       <th>Date</th>
 
       <th></th>
@@ -13,8 +14,9 @@
   <tbody>
 <%= for event <- @events do %>
     <tr>
-      <td><%= event.title %></td>
+      <td><%= event.name %></td>
       <td><%= event.description %></td>
+      <td><%= event.location %></td>
       <td><%= event.date %></td>
 
       <td>

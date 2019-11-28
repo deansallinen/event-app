@@ -1,14 +1,24 @@
 defmodule ListappWeb.EventControllerTest do
   use ListappWeb.ConnCase
 
-  alias Listapp.Web
+  alias Listapp.Events
 
-  @create_attrs %{date: ~D[2010-04-17], description: "some description", title: "some title"}
-  @update_attrs %{date: ~D[2011-05-18], description: "some updated description", title: "some updated title"}
-  @invalid_attrs %{date: nil, description: nil, title: nil}
+  @create_attrs %{
+    date: ~D[2010-04-17],
+    description: "some description",
+    location: "some location",
+    name: "some name"
+  }
+  @update_attrs %{
+    date: ~D[2011-05-18],
+    description: "some updated description",
+    location: "some updated location",
+    name: "some updated name"
+  }
+  @invalid_attrs %{date: nil, description: nil, location: nil, name: nil}
 
   def fixture(:event) do
-    {:ok, event} = Web.create_event(@create_attrs)
+    {:ok, event} = Events.create_event(@create_attrs)
     event
   end
 
@@ -75,6 +85,7 @@ defmodule ListappWeb.EventControllerTest do
     test "deletes chosen event", %{conn: conn, event: event} do
       conn = delete(conn, Routes.event_path(conn, :delete, event))
       assert redirected_to(conn) == Routes.event_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.event_path(conn, :show, event))
       end

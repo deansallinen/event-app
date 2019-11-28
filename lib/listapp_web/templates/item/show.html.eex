@@ -1,13 +1,6 @@
-<h1>Show Item</h1>
-
-<ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @item.name %>
-  </li>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.item_path(@conn, :edit, @item) %></span>
-<span><%= link "Back", to: Routes.item_path(@conn, :index) %></span>
+<%= @item.name %>
+      <%# <%= form_for @conn, Routes.event_item_path(@conn, :delete, @event.id, item.id), [method: :delete, as: :user], fn _f -> %1> %>
+      <%#   <1%# <div class="form-group"> %1> %>
+      <%#     <%= submit "Delete" %1> %>
+      <%#   <1%# </div> %1> %>
+      <%# <% end %1> %>

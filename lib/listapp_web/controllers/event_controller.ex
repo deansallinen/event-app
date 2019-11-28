@@ -1,21 +1,26 @@
 defmodule ListappWeb.EventController do
   use ListappWeb, :controller
 
-  alias Listapp.Web
-  alias Listapp.Web.Event
+  alias Listapp.Events
+  alias Listapp.Events.{Event, Item}
 
-  def index(conn, _params) do
-    events = Web.list_events()
+  def action(conn, _) do
+    args = [conn, conn.params, conn.assigns.current_user]
+    apply(__MODULE__, action_name(conn), args)
+  end
+
+  def index(conn, _params, current_user) do
+    events = Events.list_user_events(current_user)
     render(conn, "index.html", events: events)
   end
 
-  def new(conn, _params) do
-    changeset = Web.change_event(%Event{})
+  def new(conn, _params, _current_user) do
+    changeset = Events.change_event(%Event{})
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"event" => event_params}) do
-    case Web.create_event(event_params) do
+  def create(conn, %{"event" => event_params}, current_user) do
+    case Events.create_event(current_user, event_params) do
       {:ok, event} ->
         conn
         |> put_flash(:info, "Event created successfully.")
@@ -26,21 +31,22 @@ defmodule ListappWeb.EventController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    event = Web.get_event!(id)
-    render(conn, "show.html", event: event)
+  def show(conn, %{"id" => id}, current_user) do
+    event = Events.get_user_event!(current_user, id)
+    item_changeset = Events.change_item(%Item{})
+    render(conn, "show.html", event: event, item_changeset: item_changeset)
   end
 
-  def edit(conn, %{"id" => id}) do
-    event = Web.get_event!(id)
-    changeset = Web.change_event(event)
+  def edit(conn, %{"id" => id}, current_user) do
+    event = Events.get_user_event!(current_user, id)
+    changeset = Events.change_event(event)
     render(conn, "edit.html", event: event, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "event" => event_params}) do
-    event = Web.get_event!(id)
+  def update(conn, %{"id" => id, "event" => event_params}, current_user) do
+    event = Events.get_user_event!(current_user, id)
 
-    case Web.update_event(event, event_params) do
+    case Events.update_event(event, event_params) do
       {:ok, event} ->
         conn
         |> put_flash(:info, "Event updated successfully.")
@@ -51,9 +57,9 @@ defmodule ListappWeb.EventController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    event = Web.get_event!(id)
-    {:ok, _event} = Web.delete_event(event)
+  def delete(conn, %{"id" => id}, current_user) do
+    event = Events.get_user_event!(current_user, id)
+    {:ok, _event} = Events.delete_event(event)
 
     conn
     |> put_flash(:info, "Event deleted successfully.")
