@@ -2,15 +2,16 @@ defmodule Listapp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Listapp.Accounts.Credential
-  alias Listapp.Events.Event
+  alias Listapp.Events.{Event, Guest}
 
   schema "users" do
     field :name, :string
     field :username, :string
 
     has_one :credential, Credential
-    has_many :events, Event # Host
-    # many_to_many :events, Event # Guest
+
+    has_many :created_events, Event # Host
+    many_to_many :attended_events, Event, join_through: Guest, on_replace: :delete # Guest
 
     timestamps()
   end

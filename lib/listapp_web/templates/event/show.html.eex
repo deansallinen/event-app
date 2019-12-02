@@ -1,11 +1,8 @@
-<h1>Show Event</h1>
+<h1>
+    <%= @event.name %>
+</h1>
 
 <ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @event.name %>
-  </li>
 
   <li>
     <strong>Description:</strong>
@@ -21,11 +18,18 @@
     <strong>Date:</strong>
     <%= @event.date %>
   </li>
+
+  <li>
+    <strong>Host:</strong>
+    <%= @event.host.name %>
+  </li>
 </ul>
 
-<%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %>
 
-<%= render ListappWeb.ItemView, "form.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset%>
+  <span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
 
-<span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
-<span><%= link "Back", to: Routes.event_path(@conn, :index) %></span>
+  <%= render ListappWeb.GuestView, "index.html", conn: @conn, event: @event, guests: @event.guests %>
+
+  <%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %>
+  <%= render ListappWeb.ItemView, "add.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset %>
+

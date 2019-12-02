@@ -24,6 +24,8 @@
           </ul>
         </nav>
         <div>
+          <%= link "Home", to: Routes.page_path(@conn, :index) %>
+          &nbsp;
           <%= link "Events", to: Routes.event_path(@conn, :index) %>
           &nbsp;
           <%= link "Users", to: Routes.user_path(@conn, :index) %>

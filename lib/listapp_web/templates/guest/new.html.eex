@@ -1,0 +1,6 @@
+<h1>New Guest</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.event_guest_path(@conn, :create, @event, @changeset)) %>
+
+
+<%# <span><%= link "Back", to: Routes.guest_path(@conn, :index) %1></span> %>

@@ -5,13 +5,9 @@
     </div>
   <% end %>
 
-  
-  <%= label f, :name %>
+  <%= label f, :name, "Add Item" %>
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
   
-  <%= label f, :user_id %>
-  <%= select f, :user_id, user_select_options(@event.guests), prompt: "Assign to a guest" %>
-
   <%= submit "Add" %>
 <% end %>

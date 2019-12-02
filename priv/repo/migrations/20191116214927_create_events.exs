@@ -8,7 +8,7 @@ defmodule Listapp.Repo.Migrations.CreateEvents do
       add :location, :string
       add :date, :date
 
-      add :user_id, references(:users, on_delete: :nothing)
+      add :host_id, references(:users, on_delete: :nothing)
 
 
       timestamps()

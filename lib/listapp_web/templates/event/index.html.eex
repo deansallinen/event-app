@@ -1,5 +1,46 @@
 <h1>My Events</h1>
 
+<h2>Hosting</h2>
+
+
+<%= if Enum.empty?(@events) do %>
+
+  <p>Host an event!</p>
+  <span><%= link "New Event", to: Routes.event_path(@conn, :new) %></span>
+  <%= else %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Date</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for event <- @events do %>
+        <tr>
+          <td><%= event.name %></td>
+          <td><%= event.description %></td>
+          <td><%= event.location %></td>
+          <td><%= event.date %></td>
+
+          <td>
+            <span><%= link "Show", to: Routes.event_path(@conn, :show, event) %></span>
+            <span><%= link "Edit", to: Routes.event_path(@conn, :edit, event) %></span>
+            <span><%= link "Delete", to: Routes.event_path(@conn, :delete, event), method: :delete, data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% end %>
+
+
+<h2>Attending</h2>
 <table>
   <thead>
     <tr>
@@ -12,21 +53,17 @@
     </tr>
   </thead>
   <tbody>
-<%= for event <- @events do %>
-    <tr>
-      <td><%= event.name %></td>
-      <td><%= event.description %></td>
-      <td><%= event.location %></td>
-      <td><%= event.date %></td>
+    <%= for event <- @attended_events do %>
+      <tr>
+        <td><%= event.name %></td>
+        <td><%= event.description %></td>
+        <td><%= event.location %></td>
+        <td><%= event.date %></td>
 
-      <td>
-        <span><%= link "Show", to: Routes.event_path(@conn, :show, event) %></span>
-        <span><%= link "Edit", to: Routes.event_path(@conn, :edit, event) %></span>
-        <span><%= link "Delete", to: Routes.event_path(@conn, :delete, event), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
+        <td>
+          <span><%= link "Show", to: Routes.event_path(@conn, :show, event) %></span>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
-
-<span><%= link "New Event", to: Routes.event_path(@conn, :new) %></span>

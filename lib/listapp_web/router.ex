@@ -19,6 +19,8 @@ defmodule ListappWeb.Router do
 
     get "/", PageController, :index
 
+    get "/events/:id", EventController, :show
+
     resources "/users", UserController
     resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
   end
@@ -28,6 +30,8 @@ defmodule ListappWeb.Router do
     pipe_through [:browser, :authenticate_user]
     resources "/events", EventController do
       resources "/items", ItemController
+      put "/items/:id/claim", ItemController, :claim
+      resources "/guests", GuestController
     end
   end
 

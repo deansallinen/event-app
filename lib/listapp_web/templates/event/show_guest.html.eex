@@ -1,0 +1,31 @@
+<h1>
+  <%= @event.name %>
+</h1>
+
+<ul>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @event.description %>
+  </li>
+
+  <li>
+    <strong>Location:</strong>
+    <%= @event.location %>
+  </li>
+
+  <li>
+    <strong>Date:</strong>
+    <%= @event.date %>
+  </li>
+
+  <li>
+    <strong>Host:</strong>
+    <%= @event.host.name %>
+  </li>
+</ul>
+
+<h2>Login to see details</h2>
+<span><%= link "Login", to: Routes.session_path(@conn, :new, redirect_to: @event.id, test: :test  )%></span> 
+<%# TODO: add a reference to current event so logged in users are redirected back to the event %>
+

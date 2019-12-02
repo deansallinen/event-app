@@ -1,7 +1,7 @@
 defmodule Listapp.Events.Event do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Listapp.Events.Item
+  alias Listapp.Events.{Item, Guest}
   alias Listapp.Accounts.User
 
   schema "events" do
@@ -11,7 +11,9 @@ defmodule Listapp.Events.Event do
     field :name, :string
 
     has_many :items, Item
-    belongs_to :user, User
+
+    belongs_to :host, User
+    many_to_many :guests, User, join_through: Guest, on_replace: :delete
 
     timestamps()
   end
@@ -22,4 +24,5 @@ defmodule Listapp.Events.Event do
     |> cast(attrs, [:name, :description, :location, :date])
     |> validate_required([:name, :description, :location, :date])
   end
+
 end

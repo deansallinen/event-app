@@ -16,7 +16,13 @@ defmodule Listapp.Events.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:name, :event_id])
+    |> cast(attrs, [:name, :event_id, :user_id])
     |> validate_required([:name])
   end
+
+  def assign_changeset(item, attrs) do
+    item
+    |> cast(attrs, [:user_id])
+  end
+
 end

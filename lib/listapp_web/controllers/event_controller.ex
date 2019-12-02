@@ -2,7 +2,7 @@ defmodule ListappWeb.EventController do
   use ListappWeb, :controller
 
   alias Listapp.Events
-  alias Listapp.Events.{Event, Item}
+  alias Listapp.Events.{Event, Item, Guest}
 
   def action(conn, _) do
     args = [conn, conn.params, conn.assigns.current_user]
@@ -10,8 +10,14 @@ defmodule ListappWeb.EventController do
   end
 
   def index(conn, _params, current_user) do
-    events = Events.list_user_events(current_user)
-    render(conn, "index.html", events: events)
+    hosted_events = Events.list_user_events(current_user)
+    attended_events = Events.list_user_attended_events(current_user)
+    render(
+      conn, 
+      "index.html", 
+      events: hosted_events, 
+      attended_events: attended_events
+    )
   end
 
   def new(conn, _params, _current_user) do
@@ -32,9 +38,31 @@ defmodule ListappWeb.EventController do
   end
 
   def show(conn, %{"id" => id}, current_user) do
-    event = Events.get_user_event!(current_user, id)
+    # event = Events.get_user_event!(current_user, id)
+    event = Events.get_event!(id)
     item_changeset = Events.change_item(%Item{})
-    render(conn, "show.html", event: event, item_changeset: item_changeset)
+    guest_changeset = Events.change_guest(%Guest{})
+
+    cond do
+      current_user in event.guests ->
+        render(
+          conn, 
+          "show.html", 
+          event: event, 
+          item_changeset: item_changeset,
+          guest_changeset: guest_changeset
+        )
+      current_user ->
+        render(
+          conn, 
+          "rsvp.html", 
+          event: event, 
+          item_changeset: item_changeset,
+          guest_changeset: guest_changeset
+        )
+      true ->
+        render(conn, "show_guest.html", event: event)
+    end
   end
 
   def edit(conn, %{"id" => id}, current_user) do

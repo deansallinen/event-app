@@ -1,23 +1,31 @@
-<h1>All Items</h1>
+<h2>Items</h2>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
+      <th>User</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-<%= for item <- @items do %>
-    <tr>
-      <td><%= item.name %></td>
-      <td>
-        <span><%= link "Show", to: Routes.event_item_path(@conn, :show, @conn.assigns.event.id, item) %></span>
-        <span><%= link "Edit", to: Routes.event_item_path(@conn, :edit, @conn.assigns.event.id, item) %></span>
-        <span><%= link "Delete", to: Routes.event_item_path(@conn, :delete, @conn.assigns.event.id, item), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
+    <%= for item <- @items do %>
+      <tr>
+        <td><%= item.name %></td>
+        <td>
+          <%= if item.user do %>
+            <%= item.user.name %>
+          <% end %>
+        </td>
+        <td>
+          <%# <span><%= link "Show", to: Routes.event_item_path(@conn, :show, @conn.assigns.event.id, item) %1></span> %>
+          <span><%= link "Edit", to: Routes.event_item_path(@conn, :edit, @conn.assigns.event.id, item) %></span>
+          <span><%= link "Delete", to: Routes.event_item_path(@conn, :delete, @conn.assigns.event.id, item), method: :delete, data: [confirm: "Are you sure?"] %></span>
+          <span><%= link "Claim", to: Routes.event_item_path(@conn, :claim, @conn.assigns.event.id, item), method: :put %></span>
+          <%# <%= form_for @assign_changeset, @action, fn f -> %1> <%= submit "Claim" %1> <% end %1> %>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 
