@@ -1,6 +1,16 @@
-<table>
-  <tr>
-    <td><%= @item.name %></td>
-  </tr>
-</table>
+<div class="flex justify-between">
+
+  <div><%= @item.name %></div>
+  <div>
+    <%= if @item.user do %>
+      <%= @item.user.name %>
+    <% end %>
+  </div>
+  <div>
+    <span><%= link "Edit", to: Routes.event_item_path(@conn, :edit, @conn.assigns.event.id, @item) %></span>
+    <span><%= link "Delete", to: Routes.event_item_path(@conn, :delete, @conn.assigns.event.id, @item), method: :delete, data: [confirm: "Are you sure?"] %></span>
+    <span><%= link "Claim", to: Routes.event_item_path(@conn, :claim, @conn.assigns.event.id, @item), method: :put %></span>
+
+  </div>
+</div>
 

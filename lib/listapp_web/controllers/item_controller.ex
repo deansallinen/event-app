@@ -46,7 +46,6 @@ defmodule ListappWeb.ItemController do
   def update(conn, %{"id" => id, "event_id" => event_id, "item" => item_params}) do
     item = Events.get_item!(id)
     event = Events.get_event!(event_id)
-    IO.inspect item_params
 
     case Events.update_item(item, item_params) do
       {:ok, _item} ->

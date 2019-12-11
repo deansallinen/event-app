@@ -33,5 +33,28 @@ defmodule ListappWeb.Auth do
     end
   end
 
+  def authenticate_host(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: Routes.session_path(conn, :new))
+      |> halt()
+    end
+  end
+
+  def authenticate_admin(conn, _opts) do
+    if conn.assigns.current_user.email == "deza604@gmail.com" do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be an admin to do that.")
+      |> redirect(to: Routes.session_path(conn, :new))
+      |> halt()
+    end
+  end
+
+
 end
 

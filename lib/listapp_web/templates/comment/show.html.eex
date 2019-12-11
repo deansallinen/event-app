@@ -1,0 +1,6 @@
+<div>
+  <span><%= @comment.user.name %>:</span>
+  <span><%= @comment.message %></span>
+  <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, @comment) %></span>
+  <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, @comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
+</div>

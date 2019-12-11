@@ -1,20 +1,20 @@
 
+
 <div class="flex justify-between items-center">
   <h1>Events</h1>
-  <span class="px-4 py-2 rounded-lg border hover:bg-gray-200"><%= link "New Event", to: Routes.event_path(@conn, :new) %></span>
+  <%# <span class="px-4 py-2 rounded-lg border hover:bg-gray-200"><%= link "New Event", to: Routes.event_path(:new) %1></span> %>
 </div>
-
 <div class="">
-  <%= link "All", to: Routes.event_path(@conn, :index), class: "inline-block mr-2 text-base" %>
-  <%= link "Hosting", to: Routes.event_path(@conn, :index, %{filter: :hosting}), class: "inline-block mr-2 text-base" %>
-  <%= link "Attending", to: Routes.event_path(@conn, :index, %{filter: :attending}), class: "inline-block mr-2 text-base" %>
+  <h2 class="inline-block mr-2 text-base">All</h2>
+  <h2 class="inline-block mr-2 text-base">Hosting</h2>
+  <h2 class="inline-block mr-2 text-base">Attending</h2>
 </div>
 
 <%= if Enum.empty?(@events) do %>
   <p>Host an event!</p>
 <% else %>
   <%= for event <- @events do %>
-    <%= link to: Routes.event_path(@conn, :show, event) do %>
+    <%# <%= link to: Routes.event_path(@conn, :show, event) do %1> %>
       <div class="my-6 max-w-sm rounded-lg shadow bg-white w-full">
         <div class="relative">
           <div class="my-4 mx-4 px-5 py-2 absolute bg-white flex flex-col items-center rounded-lg shadow ">
@@ -29,6 +29,6 @@
           <td><%= event.location %></td>
         </div>
       </div>
-    <% end %>
+    <%# <% end %1> %>
   <% end %>
 <% end %>

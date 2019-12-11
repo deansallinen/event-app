@@ -10,7 +10,7 @@ defmodule Listapp.Accounts.User do
 
     has_one :credential, Credential
 
-    has_many :created_events, Event # Host
+    has_many :created_events, Event, foreign_key: :host_id # Host
     many_to_many :attended_events, Event, join_through: Guest, on_replace: :delete # Guest
 
     timestamps()

@@ -1,3 +1,66 @@
 /* This file is for your main application css. */
 
-@import "./phoenix.css";
+/* @import "./phoenix.css"; */
+/* @import "../../deps/phoenix_live_view/assets/css/live_view.css"; */
+
+/* app.css */
+
+@tailwind base;
+
+h1 {
+  @apply text-2xl;
+}
+h2 {
+  @apply text-xl;
+}
+h3 {
+  @apply text-lg;
+}
+
+input[type="text"], input[type="password"], textarea {
+	@apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4 
+}
+
+label {
+	@apply block text-gray-700 text-sm font-bold mb-2
+}
+
+button {
+	@apply px-4 py-2 rounded border
+}
+
+@tailwind components;
+
+/* Put your custom components here */
+.alert {
+	@apply mt-4 rounded-lg px-4 py-4 
+}
+
+.alert:empty {
+	@apply hidden 
+}
+
+.alert-info {
+	@apply bg-blue-200 
+}
+
+.alert-danger {
+	@apply bg-red-200
+}
+
+/* .text-input { */
+/* 	@apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight */ 
+/* } */
+
+.text-input:focus {
+	@apply outline-none shadow-outline
+}
+
+/* .label { */
+/* 	@apply block text-gray-700 text-sm font-bold mb-2 */
+/* } */
+
+@tailwind utilities;
+
+/* Put your custom utilities here */
+

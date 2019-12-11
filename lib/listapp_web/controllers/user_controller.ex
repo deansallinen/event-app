@@ -3,7 +3,8 @@ defmodule ListappWeb.UserController do
 
   alias Listapp.Accounts
   alias Listapp.Accounts.User
-  plug :authenticate_user when action in [:index, :show]
+  plug :authorize_user when action in [:edit, :delete, :update]
+  plug :authorize_admin when action in [:index]
 
 
   def index(conn, _params) do
@@ -62,5 +63,29 @@ defmodule ListappWeb.UserController do
     conn
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: Routes.user_path(conn, :index))
+  end
+
+  defp authorize_user(conn, _opts) do
+    %{params: %{"id" => user_id}} = conn
+    user = Accounts.get_user!(user_id)
+    if conn.assigns.current_user == user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not allowed to edit that user")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
+
+  defp authorize_admin(conn, _opts) do
+    if conn.assigns.current_user.credential.email == "deza604@gmail.com" do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not the admin")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
   end
 end

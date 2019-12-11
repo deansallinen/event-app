@@ -26,6 +26,5 @@
 </ul>
 
 <h2>Login to see details</h2>
-<span><%= link "Login", to: Routes.session_path(@conn, :new, redirect_to: @event.id, test: :test  )%></span> 
-<%# TODO: add a reference to current event so logged in users are redirected back to the event %>
+<span><%= link "Login", to: Routes.session_path(@conn, :new, redirect_to: Routes.event_path(@conn, :show, @event.id))%></span> 
 

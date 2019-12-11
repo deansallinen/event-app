@@ -1,20 +1,22 @@
-<h1>Login</h1>
-
-            <%# [method: :post, as: :user], %> 
+<div class="w-full max-w-xs mx-auto mt-6">
 <%= form_for @conn, 
             Routes.session_path(@conn, :create), 
-            [as: :session],
+            [as: :session, class: "bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"],
             fn f -> %>
   <div class="form-group">
-    <%= text_input f, :username, placeholder: "Username" %>
+    <%= label f, :username, class: "label" %>
+    <%= text_input f, :username, placeholder: "Username", class: "text-input"%>
   </div>
 
-  <div class="form-group">
-    <%= password_input f, :password, placeholder: "Password" %>
+  <div class="mt-4">
+    <%= label f, :password, class: "label" %>
+    <%= password_input f, :password, placeholder: "**********", class: "text-input"%>
   </div>
 
-  <div class="form-group">
-    <%= submit "Login" %>
+  <div class="flex items-center justify-between mt-6">
+    <%= submit "Login", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+    <%= link "Sign Up", to: Routes.user_path(@conn, :new), class: "inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" %>
   </div>
 <% end %>
 
+</div>

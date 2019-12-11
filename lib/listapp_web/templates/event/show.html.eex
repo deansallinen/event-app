@@ -1,35 +1,46 @@
-<h1>
-    <%= @event.name %>
-</h1>
+<div class="flex w-full">
+  <div class="left flex-grow">
+    <h1> <%= @event.name %> <span class="text-sm text-gray-700"><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span></h1> 
+    <%# <div> User is host: <%= @is_host %1> </div> %>
+    <div class="flex items-center my-4">
+      <svg class="h-6 w-6 mr-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M1 4c0-1.1.9-2 2-2h14a2 2 0 012 2v14a2 2 0 01-2 2H3a2 2 0 01-2-2V4zm2 2v12h14V6H3zm2-6h2v2H5V0zm8 0h2v2h-2V0zM5 9h2v2H5V9zm0 4h2v2H5v-2zm4-4h2v2H9V9zm0 4h2v2H9v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z"/>
+      </svg>
+      <div>
+        <p id="event-date" class="font-bold"><%= format_date(@event.date) %></p>
+        <p id="event-time" class="">5:00 to 6:00</p>
+      </div>
+    </div>
+    <div class="flex items-center my-4">
+      <svg class="h-6 w-6 mr-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M10 20S3 10.87 3 7a7 7 0 1114 0c0 3.87-7 13-7 13zm0-11a2 2 0 100-4 2 2 0 000 4z"/>
+      </svg>
+      <div>
+        <p id="event-location" class="font-bold"> <%= @event.location %> </p>
+        <p id="event-address" class="">1234 Main Street</p>
+      </div>
+    </div>
 
-<ul>
+    <section class="my-6">
+      <h2>About</h2>
+      <p class="text-gray-700 text-base"><%= @event.description %></p>
+    </section>
 
-  <li>
-    <strong>Description:</strong>
-    <%= @event.description %>
-  </li>
+    <section class="my-6">
+      <%= render ListappWeb.GuestView, "index.html", conn: @conn, event: @event, guests: @event.guests, is_host: @is_host  %>
+    </section>
 
-  <li>
-    <strong>Location:</strong>
-    <%= @event.location %>
-  </li>
+    <%# <%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %1> %>
+    <h2>Items</h2>
+    <%= render_many @event.items, ListappWeb.ItemView, "show.html", conn: @conn %>
+    <%= render ListappWeb.ItemView, "add.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset %>
 
-  <li>
-    <strong>Date:</strong>
-    <%= @event.date %>
-  </li>
-
-  <li>
-    <strong>Host:</strong>
-    <%= @event.host.name %>
-  </li>
-</ul>
+  </div>
+  <div class="right "> </div>
 
 
-  <span><%= link "Edit", to: Routes.event_path(@conn, :edit, @event) %></span>
 
-  <%= render ListappWeb.GuestView, "index.html", conn: @conn, event: @event, guests: @event.guests %>
 
-  <%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %>
-  <%= render ListappWeb.ItemView, "add.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset %>
 
+</div>
+<%= render ListappWeb.CommentView, "index.html", conn: @conn, comments: @event.comments%>

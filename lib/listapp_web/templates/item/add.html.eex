@@ -1,13 +1,12 @@
-<%= form_for @item_changeset, @action, fn f -> %>
+<%= form_for @item_changeset, @action, [class: "flex"], fn f -> %>
   <%= if @item_changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
-  <%= label f, :name, "Add Item" %>
-  <%= text_input f, :name %>
+  <%= text_input f, :name, placeholder: "New item" %>
   <%= error_tag f, :name %>
   
-  <%= submit "Add" %>
+  <%= submit "Add", class: "px-4 py-2 border rounded"%>
 <% end %>

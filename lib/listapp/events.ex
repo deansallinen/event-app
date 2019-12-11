@@ -9,27 +9,34 @@ defmodule Listapp.Events do
   alias Listapp.Events.{Event, Item, Guest}
   alias Listapp.Accounts.User
 
-  @doc """
-  Returns the list of events.
-
-  ## Examples
-
-      iex> list_events()
-      [%Event{}, ...]
-
-  """
-  def list_events do
-    Repo.all(Event)
-  end
+  # def list_events do
+  #   Repo.all(Event)
+  # end
 
   def list_user_events(%User{} = user) do
-    Event
-    |> user_events_query(user)
+    created_events = Ecto.assoc(user, :created_events)
+    attended_events = Ecto.assoc(user, :attended_events)
+    union_query = attended_events |> union(^created_events)
+
+    union_query
+    |> subquery()
+    |> order_by([asc: :date])
     |> Repo.all()
   end
 
   def list_user_attended_events(%User{} = user) do
-    Repo.all(Ecto.assoc(user, :attended_events))
+    user
+    |> Ecto.assoc(:attended_events)
+    |> order_by([asc: :date])
+    |> Repo.all()
+    # Repo.all(Ecto.assoc(user, :attended_events))
+  end
+
+  def list_user_hosted_events(%User{} = user) do
+    Event
+    |> user_events_query(user)
+    |> order_by([asc: :date])
+    |> Repo.all()
   end
 
   def get_user_event!(%User{} = user, id) do
@@ -39,33 +46,21 @@ defmodule Listapp.Events do
     |> Repo.preload(items: :user)
     |> Repo.preload(:host)
     |> Repo.preload(:guests)
+    |> Repo.preload(comments: :user)
   end
 
-  defp user_events_query(query, %User{id: host_id}) do
-    from(e in query, where: e.host_id == ^host_id) 
+  defp user_events_query(events, %User{id: host_id}) do
+    from(e in events, where: e.host_id == ^host_id, order_by: [asc: :date]) 
   end
 
 
-  @doc """
-  Gets a single event.
-
-  Raises `Ecto.NoResultsError` if the Event does not exist.
-
-  ## Examples
-
-      iex> get_event!(123)
-      %Event{}
-
-      iex> get_event!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_event!(id) do
     Event
     |> Repo.get!(id)
     |> Repo.preload(items: :user)
-    |> Repo.preload(:host)
+    |> Repo.preload(host: :credential)
     |> Repo.preload(guests: :credential)
+    |> Repo.preload(comments: :user)
   end
 
   @doc """
@@ -247,5 +242,42 @@ defmodule Listapp.Events do
 
   def change_guest(%Guest{} = guest) do
     Guest.changeset(guest, %{})
+  end
+
+
+  alias Listapp.Events.Comment
+
+  def list_comments do
+    Repo.all(Comment)
+  end
+
+  def list_event_comments(event) do
+    Comment
+    |> where(event_id: ^event)
+    |> Repo.all()
+  end
+
+  def get_comment!(id), do: Repo.get!(Comment, id)
+
+  def create_comment(user, event, attrs \\ %{}) do
+    %Comment{}
+    |> Comment.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:event, event)
+    |> Repo.insert()
+  end
+
+  def update_comment(%Comment{} = comment, attrs) do
+    comment
+    |> Comment.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_comment(%Comment{} = comment) do
+    Repo.delete(comment)
+  end
+
+  def change_comment(%Comment{} = comment) do
+    Comment.changeset(comment, %{})
   end
 end

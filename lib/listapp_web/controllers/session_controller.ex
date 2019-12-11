@@ -3,26 +3,34 @@ defmodule ListappWeb.SessionController do
 
   alias Listapp.Accounts
 
-  def new(conn, _params) do
+  def new(conn, params) do
+
+    redirect_to = params["redirect_to"] || nil
+
+    conn = put_session(conn, :redirect_to, redirect_to)
+
     render(conn, "new.html")
   end
 
-  def create(conn, %{"session" => %{"username" => username, "password" => password}}) do
+  def create(conn, %{"session" => %{"username" => username, "password" => password}} = params) do
 
-    redirect_to = 
-      case conn.params["redirect"] do
-        nil -> 
+    IO.inspect conn
+
+    redirect_link = 
+      case get_session(conn, :redirect_to) do
+        nil ->
           Routes.event_path(conn, :index)
-        path ->
-          path
+        redirect_to -> 
+          redirect_to 
       end
-    
+
     case Accounts.authenticate_by_username_and_password(username, password) do
       {:ok, user} ->
         conn
         |> ListappWeb.Auth.login(user)
         |> put_flash(:info, "Welcome back, #{user.name}!")
-        |> redirect(to: redirect_to)
+        |> delete_session(:redirect_to)
+        |> redirect(to: redirect_link) 
 
       {:error, _reason} ->
         conn
