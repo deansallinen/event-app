@@ -1,0 +1,30 @@
+version: '3'
+
+# containers to run
+services:
+        phoenix:
+                build:
+                        context: .
+                environment:
+                        PGUSER: postgres
+                        PGPASSWORD: postgres
+                        PGDATABASE: database_name
+                        PGPORT: 5432
+                                # hostname of database container
+                        PGHOST: db
+                ports:
+                        - "4000:4000"
+                depends_on:
+                        - db
+        db:
+                image: postgres:alpine
+                environment: 
+                        POSTGRES_USER: postgres
+                        POSTGRES_PASSWORD: postgres
+                        # path for postgres to store data
+                        PGDATA: /var/lib/postgresql/data/pgdata
+                restart: always
+                volumes:
+                        - pgdata:/var/lib/postgresql/data
+volumes:
+        pgdata:
