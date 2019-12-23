@@ -3,7 +3,7 @@ defmodule ListappWeb.PageController do
   alias Phoenix.LiveView
 
   def index(conn, _params) do
-    LiveView.Controller.live_render(conn, ListappWeb.TestLiveView, session: %{})
-    # render(conn, "index.html")
+    # LiveView.Controller.live_render(conn, ListappWeb.TestLiveView, session: %{})
+    render(conn, "index.html")
   end
 end

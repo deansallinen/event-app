@@ -25,7 +25,5 @@
   </li>
 </ul>
 
-
-    <h2>RSVP</h2>
   <%= render ListappWeb.GuestView, "form.html", action: Routes.event_guest_path(@conn, :create, @event.id), event: @event, changeset: @guest_changeset %>
 

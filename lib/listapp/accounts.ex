@@ -24,6 +24,7 @@ defmodule Listapp.Accounts do
     end)
   end
 
+
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
@@ -74,12 +75,18 @@ defmodule Listapp.Accounts do
     Credential.changeset(credential, %{})
   end
 
-  def authenticate_by_email_password(email, password) do
-    user = get_user_by(email: email)
-    # query =
-    #   from u in User,
-    #     inner_join: c in assoc(u, :credential),
-    #     where: c.email == ^email
+  def get_user_by_email(email) do
+    query =
+      from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.email == ^email,
+        preload: [credential: c]
+
+    Repo.one!(query)
+  end
+
+  def authenticate_by_email_and_password(email, password) do
+    user = get_user_by_email(email)
 
     cond do
       user && Argon2.verify_pass(password, user.credential.password_hash) ->

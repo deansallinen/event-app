@@ -55,6 +55,9 @@ button {
 .text-input:focus {
 	@apply outline-none shadow-outline
 }
+.help-block {
+	@apply text-sm text-red-600 
+}
 
 /* .label { */
 /* 	@apply block text-gray-700 text-sm font-bold mb-2 */

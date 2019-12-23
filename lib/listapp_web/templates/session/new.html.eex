@@ -4,8 +4,8 @@
             [as: :session, class: "bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"],
             fn f -> %>
   <div class="form-group">
-    <%= label f, :username, class: "label" %>
-    <%= text_input f, :username, placeholder: "Username", class: "text-input"%>
+    <%= label f, :email, class: "label" %>
+    <%= text_input f, :email, placeholder: "Email", autofocus: true, class: "text-input" %>
   </div>
 
   <div class="mt-4">

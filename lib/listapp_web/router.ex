@@ -20,8 +20,8 @@ defmodule ListappWeb.Router do
 
     get "/", PageController, :index
 
-    get "/events/:id", EventController, :show
-    # resources "/events", UserController, only: [:new, :create, :show, :index]
+    resources "/events", EventController, only: [:show, :index] 
+    # get "/events/:id", EventController, :show
 
     resources "/users", UserController, only: [:new, :create, :show]
     resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
@@ -31,14 +31,18 @@ defmodule ListappWeb.Router do
   scope "/manage", ListappWeb do
     pipe_through [:browser, :authenticate_user]
 
-    resources "/users", UserController, except: [:new, :create] 
-    
     resources "/events", EventController do
       resources "/items", ItemController
       put "/items/:id/claim", ItemController, :claim
       resources "/guests", GuestController
       resources "/comments", CommentController
     end
+  end
+
+  scope "/admin", ListappWeb do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/users", UserController, except: [:new, :create] 
   end
 
   # Other scopes may use custom stacks.

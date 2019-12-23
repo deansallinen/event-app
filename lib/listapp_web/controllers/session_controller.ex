@@ -3,18 +3,11 @@ defmodule ListappWeb.SessionController do
 
   alias Listapp.Accounts
 
-  def new(conn, params) do
-
-    redirect_to = params["redirect_to"] || nil
-
-    conn = put_session(conn, :redirect_to, redirect_to)
-
+  def new(conn, _params) do
     render(conn, "new.html")
   end
 
-  def create(conn, %{"session" => %{"username" => username, "password" => password}} = params) do
-
-    IO.inspect conn
+  def create(conn, %{"session" => %{"email" => email, "password" => password}} = params) do
 
     redirect_link = 
       case get_session(conn, :redirect_to) do
@@ -24,7 +17,7 @@ defmodule ListappWeb.SessionController do
           redirect_to 
       end
 
-    case Accounts.authenticate_by_username_and_password(username, password) do
+    case Accounts.authenticate_by_email_and_password(email, password) do
       {:ok, user} ->
         conn
         |> ListappWeb.Auth.login(user)
@@ -32,9 +25,10 @@ defmodule ListappWeb.SessionController do
         |> delete_session(:redirect_to)
         |> redirect(to: redirect_link) 
 
-      {:error, _reason} ->
+      {:error, reason} ->
         conn
-        |> put_flash(:error, "Invalid email/password combination")
+        # |> put_flash(:error, "Invalid email/password combination")
+        |> put_flash(:error, "#{reason}")
         |> render("new.html")
     end
   end
@@ -42,6 +36,7 @@ defmodule ListappWeb.SessionController do
   def delete(conn, _) do
     conn
     |> ListappWeb.Auth.logout()
+    |> put_flash(:info, "Logged out successfully")
     |> redirect(to: Routes.page_path(conn, :index))
   end
 end

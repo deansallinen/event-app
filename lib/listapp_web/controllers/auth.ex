@@ -26,34 +26,36 @@ defmodule ListappWeb.Auth do
     if conn.assigns.current_user do
       conn
     else
+      IO.inspect conn.request_path
       conn
       |> put_flash(:error, "You must be logged in to access that page")
+      |> put_session(:redirect_to, conn.request_path)
       |> redirect(to: Routes.session_path(conn, :new))
       |> halt()
     end
   end
 
-  def authenticate_host(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: Routes.session_path(conn, :new))
-      |> halt()
-    end
-  end
+  # def authenticate_host(conn, _opts) do
+  #   if conn.assigns.current_user do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You must be logged in to access that page")
+  #     |> redirect(to: Routes.session_path(conn, :new))
+  #     |> halt()
+  #   end
+  # end
 
-  def authenticate_admin(conn, _opts) do
-    if conn.assigns.current_user.email == "deza604@gmail.com" do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be an admin to do that.")
-      |> redirect(to: Routes.session_path(conn, :new))
-      |> halt()
-    end
-  end
+  # def authenticate_admin(conn, _opts) do
+  #   if conn.assigns.current_user.email == "deza604@gmail.com" do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You must be an admin to do that.")
+  #     |> redirect(to: Routes.session_path(conn, :new))
+  #     |> halt()
+  #   end
+  # end
 
 
 end

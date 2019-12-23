@@ -30,8 +30,11 @@ defmodule ListappWeb.EventController do
     attended_events = Events.list_user_attended_events(current_user)
     render(conn, "index.html", events: attended_events)
   end
+  def index(conn, _params, nil) do
+    render(conn, "index_guest.html", events: [])
+  end
   def index(conn, _params, current_user) do
-    events = Events.list_user_events(current_user)
+    events = Events.list_user_events(current_user) 
     render(conn, "index.html", events: events)
   end
 
@@ -52,41 +55,43 @@ defmodule ListappWeb.EventController do
     end
   end
 
+  def show(conn, %{"id" => id, "ref" => referral}, current_user) do
+    event = Events.get_event!(id)
+    # Check valid referral
+    ref_valid? = true
+
+    cond do
+      ref_valid? ->
+        show(conn, %{"id" => id}, current_user || :referral)
+      true -> 
+        conn
+        |> put_view(ListappWeb.ErrorView)
+        |> render("404.html")
+        |> halt()
+    end
+  end
+
   def show(conn, %{"id" => id}, current_user) do
-    # event = Events.get_user_event!(current_user, id)
     event = Events.get_event!(id)
     item_changeset = Events.change_item(%Item{})
     guest_changeset = Events.change_guest(%Guest{})
 
+    assigns = [
+      event: event, 
+      item_changeset: item_changeset, 
+      guest_changeset: guest_changeset,
+      is_host: false,
+    ]
+    
     cond do
       current_user == event.host ->
-        render(
-          conn, 
-          "show.html", 
-          event: event, 
-          item_changeset: item_changeset,
-          guest_changeset: guest_changeset,
-          is_host: true
-        )
-      current_user in event.guests ->
-        render(
-          conn, 
-          "show.html", 
-          event: event, 
-          item_changeset: item_changeset,
-          guest_changeset: guest_changeset,
-          is_host: false
-        )
-      current_user ->
-        render(
-          conn, 
-          "rsvp.html", 
-          event: event, 
-          item_changeset: item_changeset,
-          guest_changeset: guest_changeset
-        )
+        render(conn, "show.html", Keyword.put(assigns, :is_host, true))
+      current_user in event.guests || current_user == :referral->
+        render(conn, "show.html", assigns)
       true ->
-        render(conn, "show_guest.html", event: event)
+        conn
+        |> put_view(ListappWeb.ErrorView)
+        |> render("404.html")
     end
   end
 
