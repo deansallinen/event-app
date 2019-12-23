@@ -2,7 +2,7 @@ defmodule ListappWeb.EventController do
   use ListappWeb, :controller
   alias Phoenix.LiveView
 
-  alias Listapp.Events
+  alias Listapp.{Events, Accounts}
   alias Listapp.Events.{Event, Item, Guest}
   plug :authorize_host when action in [:edit, :delete, :update]
 
@@ -55,15 +55,27 @@ defmodule ListappWeb.EventController do
     end
   end
 
-  def show(conn, %{"id" => id, "ref" => referral}, current_user) do
-    event = Events.get_event!(id)
-    # Check valid referral
-    ref_valid? = true
-
+  defp validate_referral(referree, event) do
     cond do
-      ref_valid? ->
-        show(conn, %{"id" => id}, current_user || :referral)
+      referree in event.guests ->
+        {:ok, referree}
+      referree == event.host ->
+        {:ok, referree}
       true -> 
+        {:error, :unauthorized}
+    end
+  end
+
+  def show(conn, %{"id" => id, "ref" => user_id}, current_user) do
+    event = Events.get_event!(id)
+    referree = Accounts.get_user!(user_id)
+
+    case validate_referral(referree, event) do
+      {:ok, referree} ->
+        conn  
+        |> put_flash(:info, "Referred by #{referree.name}") 
+        |> show(%{"id" => id}, current_user || :referral)
+      _ -> 
         conn
         |> put_view(ListappWeb.ErrorView)
         |> render("404.html")
