@@ -1,7 +1,11 @@
 defmodule ListappWeb.ItemController do
   use ListappWeb, :controller
-
+  alias Phoenix.LiveView
   alias Listapp.Events
+
+  def live(conn, _params) do
+    LiveView.Controller.live_render(conn, ListappWeb.ItemsList, session: %{})
+  end
 
   def index(conn, %{"event_id" => event_id}) do
     items = Events.list_items_in_event(event_id)

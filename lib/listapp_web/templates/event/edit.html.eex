@@ -1,5 +1,3 @@
-<h1>Edit Event</h1>
-
+<h1>Edit <%= @event.name %> <span class="text-sm text-gray-700"><%= link "Cancel", to: Routes.event_path(@conn, :show, @event) %></span></h1>
 <%= render "form.html", Map.put(assigns, :action, Routes.event_path(@conn, :update, @event)) %>
 
-<span><%= link "Cancel", to: Routes.event_path(@conn, :show, @event) %></span>

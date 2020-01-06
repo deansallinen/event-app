@@ -9,7 +9,7 @@
   </head>
   <body class="bg-gray-100">
     <header class="bg-teal-500 ">
-      <nav class="container mx-auto flex items-center justify-between flex-wrap py-6 px-4">
+      <nav class="container mx-auto flex items-center justify-between flex-wrap py-4 px-4">
         <%= link to: Routes.page_path(@conn, :index) do %>
         <div class="flex items-center flex-shrink-0 text-white mr-6">
           <span class="font-semibold text-xl tracking-tight">Dean's Event App</span>
@@ -34,7 +34,7 @@
                 </span>
               <% else %>
                 <span class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"><%= link "Register", to: Routes.user_path(@conn, :new) %></span>
-                <span class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"><%= link "Login", to: Routes.session_path(@conn, :new) %></span>
+                <span class="inline-block text-sm px-4 py-2 leading-none rounded text-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"><%= link "Login", to: Routes.session_path(@conn, :new) %></span>
               <% end %>
           </div>
         </div>

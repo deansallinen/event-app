@@ -1,0 +1,14 @@
+<section>
+  <%= form_for @changeset, "#", [phx_change: :validate, phx_submit: :save], fn f -> %> 
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+  <%= submit "Save" %>
+<% end %>
+
+<ul>
+  <%= for item <- @items do %>
+    <li><%= item.name %></li>
+  <% end %>
+</ul>
+</section>

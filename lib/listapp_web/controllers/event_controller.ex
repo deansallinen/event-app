@@ -3,7 +3,7 @@ defmodule ListappWeb.EventController do
   alias Phoenix.LiveView
 
   alias Listapp.{Events, Accounts}
-  alias Listapp.Events.{Event, Item, Guest}
+  alias Listapp.Events.{Event, Item, Guest, Comment}
   plug :authorize_host when action in [:edit, :delete, :update]
 
   def action(conn, _) do
@@ -11,30 +11,20 @@ defmodule ListappWeb.EventController do
     apply(__MODULE__, action_name(conn), args)
   end
 
-  # def index(conn, _params, current_user) do
-  #   events = Events.list_user_events(current_user)
-  #   hosted_events = Events.list_user_hosted_events(current_user)
-  #   attended_events = Events.list_user_attended_events(current_user)
-  #   LiveView.Controller.live_render(conn, ListappWeb.EventIndex, session: %{
-  #     hosted_events: hosted_events, 
-  #     events: events, 
-  #     attended_events: attended_events
-  #   })
-  # end
-
-  def index(conn, %{"filter" => "hosting"}, current_user) do
-    hosted_events = Events.list_user_hosted_events(current_user)
-    render(conn, "index.html", events: hosted_events)
-  end
-  def index(conn, %{"filter" => "attending"}, current_user) do
-    attended_events = Events.list_user_attended_events(current_user)
-    render(conn, "index.html", events: attended_events)
-  end
   def index(conn, _params, nil) do
     render(conn, "index_guest.html", events: [])
   end
-  def index(conn, _params, current_user) do
-    events = Events.list_user_events(current_user) 
+
+  def index(conn, params, current_user) do
+    events = 
+      case params do
+        %{"filter" => "hosting"} ->
+          Events.list_user_hosted_events(current_user)
+        %{"filter" => "attending"} ->
+          Events.list_user_attended_events(current_user)
+        _ ->
+          Events.list_user_events(current_user) 
+      end
     render(conn, "index.html", events: events)
   end
 
@@ -54,51 +44,47 @@ defmodule ListappWeb.EventController do
         render(conn, "new.html", changeset: changeset)
     end
   end
+  
+   defp validate_referral(ref_id, event) do
+     referrer = Accounts.get_user!(ref_id)
+     cond do
+       referrer in event.guests ->
+         {:ok, referrer}
+       referrer == event.host ->
+         {:ok, referrer}
+       true -> 
+         {:error, :unauthorized}
+     end
+   end
 
-  defp validate_referral(referree, event) do
-    cond do
-      referree in event.guests ->
-        {:ok, referree}
-      referree == event.host ->
-        {:ok, referree}
-      true -> 
-        {:error, :unauthorized}
-    end
-  end
-
-  def show(conn, %{"id" => id, "ref" => user_id}, current_user) do
+  def show(conn, %{"id" => id} = params, current_user) do
     event = Events.get_event!(id)
-    referree = Accounts.get_user!(user_id)
+    is_host? = current_user == event.host
+    is_guest? = current_user in event.guests
 
-    case validate_referral(referree, event) do
-      {:ok, referree} ->
-        conn  
-        |> put_flash(:info, "Referred by #{referree.name}") 
-        |> show(%{"id" => id}, current_user || :referral)
-      _ -> 
-        conn
-        |> put_view(ListappWeb.ErrorView)
-        |> render("404.html")
-        |> halt()
-    end
-  end
-
-  def show(conn, %{"id" => id}, current_user) do
-    event = Events.get_event!(id)
-    item_changeset = Events.change_item(%Item{})
-    guest_changeset = Events.change_guest(%Guest{})
+    referrer = 
+      case params do 
+        %{"ref" => ref_id} ->
+          case validate_referral(ref_id, event) do
+            {:ok, referrer} -> referrer
+            {:error, _message} -> nil 
+          end
+        _ -> nil
+      end
 
     assigns = [
       event: event, 
-      item_changeset: item_changeset, 
-      guest_changeset: guest_changeset,
-      is_host: false,
+      item_changeset: Events.change_item(%Item{}), 
+      guest_changeset: Events.change_guest(%Guest{}),
+      comment_changeset: Events.change_comment(%Comment{}),
     ]
-    
+
     cond do
-      current_user == event.host ->
-        render(conn, "show.html", Keyword.put(assigns, :is_host, true))
-      current_user in event.guests || current_user == :referral->
+      referrer ->
+        conn
+        |> put_flash(:info, "Referred by #{referrer.name}") 
+        |> render("show.html", assigns)
+      is_host? || is_guest? ->
         render(conn, "show.html", assigns)
       true ->
         conn
@@ -148,4 +134,5 @@ defmodule ListappWeb.EventController do
       |> halt()
     end
   end
+
 end

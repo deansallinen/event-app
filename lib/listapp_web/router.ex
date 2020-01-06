@@ -19,12 +19,16 @@ defmodule ListappWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/design", PageController, :design
 
     resources "/events", EventController, only: [:show, :index] 
     # get "/events/:id", EventController, :show
+    get "/items", ItemController, :live
 
     resources "/users", UserController, only: [:new, :create, :show]
-    resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
+    get "/login", SessionController, :new
+    delete "/logout", SessionController, :delete
+    resources "/sessions", SessionController, only: [:create], singleton: true
   end
 
 

@@ -8,17 +8,25 @@
 @tailwind base;
 
 h1 {
-  @apply text-2xl;
+	@apply text-3xl;
 }
 h2 {
-  @apply text-xl;
+	@apply text-2xl;
 }
 h3 {
-  @apply text-lg;
+	@apply text-xl;
 }
 
-input[type="text"], input[type="password"], textarea {
-	@apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4 
+p {
+	@apply text-gray-700 text-base
+}
+
+input[type="text"], input[type="password"]{
+	@apply form-input w-full
+}
+
+textarea {
+	@apply form-textarea block w-full
 }
 
 label {
@@ -26,14 +34,14 @@ label {
 }
 
 button {
-	@apply px-4 py-2 rounded border
+	@apply px-4 py-2 rounded-lg border 
 }
 
 @tailwind components;
 
 /* Put your custom components here */
 .alert {
-	@apply mt-4 rounded-lg px-4 py-4 
+	@apply my-4 rounded-lg px-4 py-4 
 }
 
 .alert:empty {
@@ -57,6 +65,13 @@ button {
 }
 .help-block {
 	@apply text-sm text-red-600 
+}
+
+.btn {
+	@apply px-4 py-2 rounded-lg border 
+}
+.btn:hover {
+	@apply bg-gray-200
 }
 
 /* .label { */

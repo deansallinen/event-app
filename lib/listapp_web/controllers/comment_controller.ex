@@ -4,6 +4,8 @@ defmodule ListappWeb.CommentController do
   alias Listapp.Events
   alias Listapp.Events.Comment
 
+  plug :authorize_commenter when action in [:edit, :delete, :update]
+
   def index(conn, %{"event_id" => event_id}) do
     comments = Events.list_event_comments(event_id)
     render(conn, "index.html", comments: comments)
@@ -60,4 +62,18 @@ defmodule ListappWeb.CommentController do
     |> put_flash(:info, "Comment deleted successfully.")
     |> redirect(to: Routes.event_path(conn, :show, event_id))
   end
+
+  defp authorize_commenter(conn, _opts) do
+    %{params: %{"id" => comment_id, "event_id" => event_id}} = conn
+    comment = Events.get_comment!(comment_id)
+    if conn.assigns.current_user == comment.user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not the owner of that comment.")
+      |> redirect(to: Routes.event_path(conn, :show, event_id))
+      |> halt()
+    end
+  end
+
 end

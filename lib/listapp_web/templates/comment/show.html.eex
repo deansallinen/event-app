@@ -1,6 +1,20 @@
-<div>
-  <span><%= @comment.user.name %>:</span>
-  <span><%= @comment.message %></span>
-  <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, @comment) %></span>
-  <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, @comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
+<div class="flex mb-4 max-w-md ">
+  <div class="left pr-3 py-1">
+    <div class="profile-picture w-6">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM7 6v2a3 3 0 1 0 6 0V6a3 3 0 1 0-6 0zm-3.65 8.44a8 8 0 0 0 13.3 0 15.94 15.94 0 0 0-13.3 0z"/></svg>
+    </div>
+  </div>
+  <div class="right">
+    <p class="comment">
+    <span class="font-bold text-gray-900 mr-1">
+      <%= link @comment.user.name, to: Routes.user_path(@conn, :show, @comment.user) %>
+    </span>
+    <span><%= @comment.message %></span>
+    </p>
+    <div class="actions">
+      <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, @comment) %></span>
+      <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, @comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      <span><%= @comment.inserted_at %></span>
+    </div>
+  </div>
 </div>

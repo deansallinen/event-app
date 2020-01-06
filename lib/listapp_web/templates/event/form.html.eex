@@ -5,21 +5,37 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name, autofocus: true  %>
-  <%= error_tag f, :name %>
+  <div class="mb-4">
+    <%= label f, :name %>
+    <%= text_input f, :name, autofocus: true  %>
+    <%= error_tag f, :name %>
+  </div>
 
-  <%= label f, :description %>
-  <%= textarea f, :description %>
-  <%= error_tag f, :description %>
+  <div class="mb-4">
+    <%= label f, :description %>
+    <%= textarea f, :description %>
+    <%= error_tag f, :description %>
+  </div>
 
-  <%= label f, :location %>
-  <%= text_input f, :location %>
-  <%= error_tag f, :location %>
+  <div class="mb-4">
+    <%= label f, :location %>
+    <%= text_input f, :location %>
+    <%= error_tag f, :location %>
+  </div>
 
-  <%= label f, :date %>
-  <%= date_select f, :date %>
-  <%= error_tag f, :date %>
+  <div class="mb-4">
+    <%= label f, :start_date %>
+    <%# TODO: Default to today only if no existing value... %>  
+    <%= my_datetime_select f, :start_date %>
+    <%= error_tag f, :start_date %>
+  </div>
+  
+  <div class="mb-4">
+    <%= label f, :end_date %>
+    <%# TODO: Default to today only if no existing value... %>  
+    <%= my_datetime_select f, :end_date %>
+    <%= error_tag f, :end_date %>
+  </div>
 
   <div>
     <%= submit "Save" %>

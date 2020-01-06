@@ -1,8 +1,2 @@
 <h1>Show Guest</h1>
 
-<ul>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.guest_path(@conn, :edit, @guest) %></span>
-<span><%= link "Back", to: Routes.guest_path(@conn, :index) %></span>

@@ -1,9 +1,7 @@
-<h2>Guests</h2>
-
 <%= for user <- @guests do %>
   <div class="flex justify-between">
         <span><%= link user.name, to: Routes.user_path(@conn, :show, user) %></span>
-        <%= if @is_host do %>
+        <%= if @event.host == @conn.assigns.current_user do %>
         <span><%= link "Remove", to: Routes.event_guest_path(@conn, :delete, @event.id, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
       <% end %>
   </div>

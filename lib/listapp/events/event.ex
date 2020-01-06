@@ -5,7 +5,8 @@ defmodule Listapp.Events.Event do
   alias Listapp.Accounts.User
 
   schema "events" do
-    field :date, :date
+    field :start_date, :utc_datetime
+    field :end_date, :utc_datetime
     field :description, :string
     field :location, :string
     field :name, :string
@@ -22,8 +23,8 @@ defmodule Listapp.Events.Event do
   @doc false
   def changeset(event, attrs) do
     event
-    |> cast(attrs, [:name, :description, :location, :date])
-    |> validate_required([:name, :description, :location, :date])
+    |> cast(attrs, [:name, :description, :location, :start_date, :end_date])
+    |> validate_required([:name, :description, :location, :start_date])
   end
 
 end

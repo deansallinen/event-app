@@ -20,14 +20,14 @@ defmodule Listapp.Events do
 
     union_query
     |> subquery()
-    |> order_by([asc: :date])
+    |> order_by([asc: :start_date])
     |> Repo.all()
   end
 
   def list_user_attended_events(%User{} = user) do
     user
     |> Ecto.assoc(:attended_events)
-    |> order_by([asc: :date])
+    |> order_by([asc: :start_date])
     |> Repo.all()
     # Repo.all(Ecto.assoc(user, :attended_events))
   end
@@ -35,7 +35,7 @@ defmodule Listapp.Events do
   def list_user_hosted_events(%User{} = user) do
     Event
     |> user_events_query(user)
-    |> order_by([asc: :date])
+    |> order_by([asc: :start_date])
     |> Repo.all()
   end
 
@@ -50,7 +50,7 @@ defmodule Listapp.Events do
   end
 
   defp user_events_query(events, %User{id: host_id}) do
-    from(e in events, where: e.host_id == ^host_id, order_by: [asc: :date]) 
+    from(e in events, where: e.host_id == ^host_id, order_by: [asc: :start_date]) 
   end
 
 
@@ -204,6 +204,9 @@ defmodule Listapp.Events do
   def change_item(%Item{} = item) do
     Item.changeset(item, %{})
   end
+  def change_item(%Item{} = item, params) do
+    Item.changeset(item, params)
+  end
 
   # def assign_item(%Item{} = item, attrs \\ %{}) do
   #   item
@@ -257,7 +260,11 @@ defmodule Listapp.Events do
     |> Repo.all()
   end
 
-  def get_comment!(id), do: Repo.get!(Comment, id)
+  def get_comment!(id) do 
+    Comment
+    |> Repo.get!(id)
+    |> Repo.preload(user: :credential)
+  end
 
   def create_comment(user, event, attrs \\ %{}) do
     %Comment{}

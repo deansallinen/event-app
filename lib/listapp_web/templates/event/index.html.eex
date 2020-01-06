@@ -1,7 +1,7 @@
 
 <div class="flex justify-between items-center">
   <h1>Events</h1>
-  <span class="px-4 py-2 rounded-lg border hover:bg-gray-200"><%= link "New Event", to: Routes.event_path(@conn, :new) %></span>
+  <%= link "New Event", to: Routes.event_path(@conn, :new), class: "btn" %>
 </div>
 
 <div class="">
@@ -14,12 +14,12 @@
   <p>Host an event!</p>
 <% else %>
   <%= for event <- @events do %>
-    <%= link to: Routes.event_path(@conn, :show, event) do %>
-      <div class="my-6 max-w-sm rounded-lg shadow bg-white w-full">
+    <div class="my-6 max-w-sm rounded-lg shadow bg-white w-full">
+      <%= link to: Routes.event_path(@conn, :show, event) do %>
         <div class="relative">
           <div class="my-4 mx-4 px-5 py-2 absolute bg-white flex flex-col items-center rounded-lg shadow ">
-            <div class="text-xl font-bold"><%= format_calendar_icon_day(event.date) %></div>
-            <div class="text-sm uppercase -mt-1"><%= format_calendar_icon_month(event.date) %></div>
+            <div class="text-xl font-bold"><%= format_calendar_icon_day(event.start_date) %></div>
+            <div class="text-sm uppercase -mt-1"><%= format_calendar_icon_month(event.start_date) %></div>
           </div>
           <div class="bg-gray-500 w-full h-24 rounded-t-lg"></div>
         </div>
@@ -28,7 +28,7 @@
           <%# <p class="text-gray-700 text-base"><%= event.description %1></p> %>
           <td><%= event.location %></td>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

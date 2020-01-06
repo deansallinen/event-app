@@ -5,8 +5,8 @@
     </div>
   <% end %>
 
-  <%= label f, :message %>
-  <%= textarea f, :message %>
+  <%# <%= label f, :message %1> %>
+  <%= textarea f, :message, placeholder: "Type your comment here..." %>
   <%= error_tag f, :message %>
 
   <div>

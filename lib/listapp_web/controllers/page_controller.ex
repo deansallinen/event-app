@@ -6,4 +6,7 @@ defmodule ListappWeb.PageController do
     # LiveView.Controller.live_render(conn, ListappWeb.TestLiveView, session: %{})
     render(conn, "index.html")
   end
+  def design(conn, _params) do
+    render(conn, "design.html")
+  end
 end
