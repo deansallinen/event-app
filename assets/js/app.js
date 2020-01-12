@@ -12,6 +12,7 @@ import css from "../css/app.css"
 import "phoenix_html"
 
 import "./collapse"
+import "./hide_element"
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:

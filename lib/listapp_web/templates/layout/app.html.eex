@@ -41,8 +41,8 @@
       </nav>
     </header>
     <main role="main" class="container mx-auto py-4 px-4 ">
-    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <div class="alert alert-info hide" role="alert"><%= get_flash(@conn, :info) %></div>
+    <p class="alert alert-danger hide" role="alert"><%= get_flash(@conn, :error) %></p>
     <%= render @view_module, @view_template, assigns %>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>

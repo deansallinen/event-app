@@ -5,6 +5,7 @@ defmodule ListappWeb.EventController do
   alias Listapp.{Events, Accounts}
   alias Listapp.Events.{Event, Item, Guest, Comment}
   plug :authorize_host when action in [:edit, :delete, :update]
+  # plug :check_host
 
   def action(conn, _) do
     args = [conn, conn.params, conn.assigns.current_user]
@@ -134,5 +135,18 @@ defmodule ListappWeb.EventController do
       |> halt()
     end
   end
+
+  # defp check_host(conn, _opts) do
+  #   %{params: %{"id" => event_id}} = conn
+  #   event = Events.get_event!(event_id)
+  #   if conn.assigns.current_user == event.host do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You are not the host.")
+  #     |> redirect(to: Routes.event_path(conn, :show, event))
+  #     |> halt()
+  #   end
+  # end
 
 end

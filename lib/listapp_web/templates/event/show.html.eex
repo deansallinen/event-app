@@ -22,7 +22,9 @@
         <path d="M10 20S3 10.87 3 7a7 7 0 1114 0c0 3.87-7 13-7 13zm0-11a2 2 0 100-4 2 2 0 000 4z"/>
       </svg>
       <div>
-        <p id="event-location" class="text-gray-900 font-bold"> <%= @event.location %> </p>
+        <p id="event-location" class="text-gray-900 font-bold"> 
+        <%= @event.location %> 
+        </p>
         <p id="event-address" class="">1234 Main Street</p>
       </div>
     </div>
@@ -32,25 +34,13 @@
       <p><%= @event.description %></p>
     </section>
 
-    <section class="my-6">
-      <h2>Who's Going</h2>  
-      <%= @event.host.name %>
-      <%= render ListappWeb.GuestView, "index.html", conn: @conn, event: @event, guests: @event.guests %>
-      <div>
-        Share using this link:
-
-        <%= share_link(@conn) %>
-      </div>
-      <%= render ListappWeb.GuestView, "form.html", action: Routes.event_guest_path(@conn, :create, @event.id), event: @event, changeset: @guest_changeset %>
+    <section class="guests my-6">
+      <%= render ListappWeb.GuestView, "index.html", conn: @conn, event: @event, guests: @event.guests, changeset: @guest_changeset%>
     </section>
 
-    <%# <%= render ListappWeb.ItemView, "index.html", conn: @conn, items: @event.items %1> %>
-    <%# <h2>Items</h2> %>
-    <%# <%= render_many @event.items, ListappWeb.ItemView, "show.html", conn: @conn %1> %>
-    <%# <%= render ListappWeb.ItemView, "add.html", action: Routes.event_item_path(@conn, :create, @event.id), item_changeset: @item_changeset %1> %>
+    <section class="comments my-6">
+      <%= render ListappWeb.CommentView, "index.html", conn: @conn, event: @event, changeset: @comment_changeset %>
+    </section>
 
   </div>
-  <h2>Comments</h2>
-  <%= render_many @event.comments, ListappWeb.CommentView, "show.html", conn: @conn%>
-  <%= render ListappWeb.CommentView, "form.html", action: Routes.event_comment_path(@conn, :create, @event.id), changeset: @comment_changeset %> 
 </div>

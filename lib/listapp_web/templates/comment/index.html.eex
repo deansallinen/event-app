@@ -1,13 +1,3 @@
-<h1>Listing Comments</h1>
-
-<%= for comment <- @comments do %>
-  <div>
-      <span><%= comment.user.name %>:</span>
-      <span><%= comment.message %></span>
-        <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, comment) %></span>
-        <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
-  </div>
-
-<% end %>
-
-<span><%= link "New Comment", to: Routes.event_comment_path(@conn, :new, @conn.assigns.event.id) %></span>
+<h2 class="">Comments</h2>
+  <%= render ListappWeb.CommentView, "form.html", action: Routes.event_comment_path(@conn, :create, @event.id), changeset: @changeset %> 
+  <%= render_many @event.comments, ListappWeb.CommentView, "show.html", conn: @conn%>

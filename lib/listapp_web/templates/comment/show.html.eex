@@ -11,10 +11,19 @@
     </span>
     <span><%= @comment.message %></span>
     </p>
-    <div class="actions">
-      <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, @comment) %></span>
-      <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, @comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      <span><%= @comment.inserted_at %></span>
+    <div class="flex justify-between">
+      <div class="text-xs text-gray-700">
+        <span ><%= format_timestamp(@comment.inserted_at) %></span>
+        <%= if is_edited?(@comment) do %> 
+          <span> - edited</span> 
+        <% end %>
+      </div>
+      <div class="actions text-xs text-gray-700">
+        <%= if comment_owner?(@conn, @comment) do %>
+        <span><%= link "Edit", to: Routes.event_comment_path(@conn, :edit, @conn.assigns.event.id, @comment) %></span>
+        <span><%= link "Delete", to: Routes.event_comment_path(@conn, :delete,  @conn.assigns.event.id, @comment), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

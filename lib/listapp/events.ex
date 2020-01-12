@@ -6,7 +6,7 @@ defmodule Listapp.Events do
   import Ecto.Query, warn: false
   alias Listapp.Repo
 
-  alias Listapp.Events.{Event, Item, Guest}
+  alias Listapp.Events.{Event, Item, Guest, Comment}
   alias Listapp.Accounts.User
 
   # def list_events do
@@ -55,12 +55,17 @@ defmodule Listapp.Events do
 
 
   def get_event!(id) do
+    comments_query = 
+      from c in Comment, 
+      join: u in assoc(c, :user), 
+      order_by: [desc: c.inserted_at], 
+      preload: [user: u]
     Event
     |> Repo.get!(id)
     |> Repo.preload(items: :user)
     |> Repo.preload(host: :credential)
     |> Repo.preload(guests: :credential)
-    |> Repo.preload(comments: :user)
+    |> Repo.preload(comments: comments_query)
   end
 
   @doc """
@@ -247,16 +252,14 @@ defmodule Listapp.Events do
     Guest.changeset(guest, %{})
   end
 
-
-  alias Listapp.Events.Comment
-
   def list_comments do
     Repo.all(Comment)
   end
 
-  def list_event_comments(event) do
+  def list_event_comments(event_id) do
     Comment
-    |> where(event_id: ^event)
+    |> where(event_id: ^event_id)
+    |> order_by([asc: :inserted_at])
     |> Repo.all()
   end
 

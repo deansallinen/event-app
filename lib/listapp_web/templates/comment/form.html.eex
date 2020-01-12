@@ -5,11 +5,13 @@
     </div>
   <% end %>
 
-  <%# <%= label f, :message %1> %>
-  <%= textarea f, :message, placeholder: "Type your comment here..." %>
-  <%= error_tag f, :message %>
-
-  <div>
-    <%= submit "Save" %>
+  <div class="flex mb-4 mt-2">
+    <%# <%= label f, :message %1> %>
+    <%= text_input f, :message, placeholder: "Type your comment here..." %>
+    <%= error_tag f, :message %>
+    
+    <div class="mx-4">
+      <%= submit "Save" %>
+    </div>
   </div>
 <% end %>

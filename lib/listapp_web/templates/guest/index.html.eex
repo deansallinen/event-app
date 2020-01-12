@@ -1,11 +1,16 @@
+<h2>Who's Going</h2>  
+<%= @event.host.name %>
+
 <%= for user <- @guests do %>
   <div class="flex justify-between">
-        <span><%= link user.name, to: Routes.user_path(@conn, :show, user) %></span>
-        <%= if @event.host == @conn.assigns.current_user do %>
-        <span><%= link "Remove", to: Routes.event_guest_path(@conn, :delete, @event.id, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      <% end %>
+    <span><%= link user.name, to: Routes.user_path(@conn, :show, user) %></span>
+    <%= if @event.host == @conn.assigns.current_user do %>
+      <span><%= link "Remove", to: Routes.event_guest_path(@conn, :delete, @event.id, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
+    <% end %>
   </div>
-
 <% end %>
 
-<%# <span><%= link "New Guest", to: Routes.guest_path(@conn, :new) %1></span> %>
+<%# <div> %>
+  <%# Share using this link: <%= share_link(@conn) %1> %>
+  <%# </div> %>
+<%= render ListappWeb.GuestView, "form.html", action: Routes.event_guest_path(@conn, :create, @event.id), event: @event, changeset: @changeset %>
